@@ -21,7 +21,9 @@ class ConverterViewController: UIViewController {
     
     // MARK: - UI Components
     private lazy var tileView: ConverterTileView = {
-        ConverterTileView()
+        let view = ConverterTileView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     // MARK: - Initialization
@@ -69,9 +71,10 @@ class ConverterViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGray4
         
+        // Add a tile view inside the content view
         contentView.addSubview(tileView)
-        tileView.translatesAutoresizingMaskIntoConstraints = false
         
+        // Pin the tile view to the edges of the content view
         tileView.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
     }
 }

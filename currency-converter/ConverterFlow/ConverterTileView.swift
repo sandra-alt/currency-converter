@@ -26,12 +26,6 @@ class ConverterTileView: UIView {
     }
     
     // MARK: - UI Components
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }()
-    
     private lazy var tileView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -126,32 +120,34 @@ class ConverterTileView: UIView {
     
     // MARK: - View Setup
     private func setupView() {
-        //
+        
+        // Add the elements of the top row of the tile to a horizontal stack
         [fromAmountTextField, fromCurrencyButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             fromHStack.addArrangedSubview($0)
         }
         
+        // Add the elements of the bottom row of the tile to another horizontal stack
         [toAmmountLabel, toCurrencyButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             toHStack.addArrangedSubview($0)
         }
         
+        // Add constraints for a separator
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        // Add all rows to a vStack
         [fromHStack, separatorView, toHStack].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             vStack.addArrangedSubview($0)
         }
         
+        // Add and pin a vStack to the tile view
         tileView.addSubview(vStack)
         vStack.bindFrameToSuperview(margin: Layout.spacing)
         
-        containerView.addSubview(tileView)
+        // Add and pin the tile view to a container view
+        addSubview(tileView)
         tileView.bindFrameToSuperview()
-        
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(containerView)
-        containerView.bindFrameToSuperview()
     }
 }
