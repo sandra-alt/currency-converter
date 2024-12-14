@@ -61,7 +61,7 @@ class ConverterTileView: UIView {
         textField.borderStyle = .roundedRect
         textField.placeholder = "Enter amount"
         textField.textColor = Layout.textColor
-        textField.keyboardType = .numberPad
+        textField.keyboardType = .decimalPad
         textField.backgroundColor = .clear
         return textField
     }()
