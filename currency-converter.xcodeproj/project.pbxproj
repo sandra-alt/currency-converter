@@ -14,6 +14,8 @@
 		112285AC2D0AFA22006D2CBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 112285AB2D0AFA22006D2CBF /* Assets.xcassets */; };
 		112285AF2D0AFA22006D2CBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 112285AD2D0AFA22006D2CBF /* LaunchScreen.storyboard */; };
 		112285B82D0B0539006D2CBF /* ConverterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112285B72D0B0539006D2CBF /* ConverterViewController.swift */; };
+		112367502D0E25BB00484E63 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1123674F2D0E25BB00484E63 /* CombineCocoa */; };
+		112367532D0E2BE100484E63 /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112367522D0E2BE100484E63 /* NumericTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,7 @@
 		112285AE2D0AFA22006D2CBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		112285B02D0AFA22006D2CBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112285B72D0B0539006D2CBF /* ConverterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewController.swift; sourceTree = "<group>"; };
+		112367522D0E2BE100484E63 /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				112367502D0E25BB00484E63 /* CombineCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +70,7 @@
 		112285A12D0AFA20006D2CBF /* currency-converter */ = {
 			isa = PBXGroup;
 			children = (
+				112367512D0E2BCC00484E63 /* UI */,
 				11111B242D0C55050025784E /* Extensions */,
 				112285B62D0B041D006D2CBF /* ConverterFlow */,
 				112285A22D0AFA20006D2CBF /* AppDelegate.swift */,
@@ -86,6 +91,14 @@
 			path = ConverterFlow;
 			sourceTree = "<group>";
 		};
+		112367512D0E2BCC00484E63 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				112367522D0E2BE100484E63 /* NumericTextField.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -102,6 +115,9 @@
 			dependencies = (
 			);
 			name = "currency-converter";
+			packageProductDependencies = (
+				1123674F2D0E25BB00484E63 /* CombineCocoa */,
+			);
 			productName = "currency-converter";
 			productReference = 1122859F2D0AFA20006D2CBF /* currency-converter.app */;
 			productType = "com.apple.product-type.application";
@@ -130,6 +146,9 @@
 				Base,
 			);
 			mainGroup = 112285962D0AFA20006D2CBF;
+			packageReferences = (
+				1123674E2D0E25BB00484E63 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
+			);
 			productRefGroup = 112285A02D0AFA20006D2CBF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -161,6 +180,7 @@
 				112285A32D0AFA20006D2CBF /* AppDelegate.swift in Sources */,
 				112285A52D0AFA20006D2CBF /* SceneDelegate.swift in Sources */,
 				112285B82D0B0539006D2CBF /* ConverterViewController.swift in Sources */,
+				112367532D0E2BE100484E63 /* NumericTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +386,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1123674E2D0E25BB00484E63 /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1123674F2D0E25BB00484E63 /* CombineCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1123674E2D0E25BB00484E63 /* XCRemoteSwiftPackageReference "CombineCocoa" */;
+			productName = CombineCocoa;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 112285972D0AFA20006D2CBF /* Project object */;
 }

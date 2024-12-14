@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CombineCocoa
 import UIKit
 
 class ConverterTileView: UIView {
@@ -55,11 +56,12 @@ class ConverterTileView: UIView {
         return view
     }()
     
-    private lazy var fromAmountTextField: UITextField = {
-        let textField = UITextField()
+    private lazy var fromAmountTextField: NumericTextField = {
+        let textField = NumericTextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "Enter amount"
         textField.textColor = Layout.textColor
+        textField.keyboardType = .numberPad
         textField.backgroundColor = .clear
         return textField
     }()
