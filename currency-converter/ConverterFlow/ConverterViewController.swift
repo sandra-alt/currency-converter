@@ -19,6 +19,10 @@ class ConverterViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
+    private let tempConverterRepository = ConverterNetworkRepository(networkService: ConverterNetworkService()) // Temp - to check if network works correctly
+    
+    private var requestTask: Task<Void, Never>?
+    
     // MARK: - UI Components
     private lazy var tileView: ConverterTileView = {
         let view = ConverterTileView()
@@ -45,6 +49,15 @@ class ConverterViewController: UIViewController {
         // Setup views
         setupScrollView()
         setupUI()
+        
+        // Temp
+        startRepeatingRequest()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        stopRepeatingRequest()
     }
     
     // MARK: - Scroll View Setup
@@ -76,5 +89,31 @@ class ConverterViewController: UIViewController {
         
         // Pin the tile view to the edges of the content view
         tileView.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
+    }
+    
+    // MARK: - Temp timer
+    private func startRepeatingRequest() {
+        requestTask = Task {
+            while !Task.isCancelled {
+                await triggerRequest()
+                try? await Task.sleep(nanoseconds: 10 * 1_000_000_000) // 10 seconds
+            }
+        }
+    }
+
+    private func stopRepeatingRequest() {
+        requestTask?.cancel()
+        requestTask = nil
+    }
+    
+    private func triggerRequest() async {
+        // Temp
+        let model = ConverterRequestModel(fromAmount: "100.00", fromCurrency: "PLN", toCurrency: "EUR")
+        do {
+            let result = try await tempConverterRepository.exchange(model: model)
+            print(result)
+        } catch {
+            print("-error-")
+        }
     }
 }
