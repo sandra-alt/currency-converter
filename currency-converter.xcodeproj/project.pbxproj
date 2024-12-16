@@ -88,7 +88,6 @@
 			children = (
 				11111B252D0C551B0025784E /* UIView+Extension.swift */,
 				1183E83A2D107589006872DB /* Reusable.swift */,
-				1183E8402D10A735006872DB /* Colors.swift */,
 				1183E8442D10BE36006872DB /* ActivityIndicator+Extension.swift */,
 			);
 			path = Extensions;
@@ -113,6 +112,7 @@
 		112285A12D0AFA20006D2CBF /* currency-converter */ = {
 			isa = PBXGroup;
 			children = (
+				1183E8462D10C760006872DB /* Resources */,
 				1183E8152D0F6077006872DB /* Network */,
 				112367512D0E2BCC00484E63 /* UI */,
 				11111B242D0C55050025784E /* Extensions */,
@@ -122,7 +122,6 @@
 				112285AB2D0AFA22006D2CBF /* Assets.xcassets */,
 				112285AD2D0AFA22006D2CBF /* LaunchScreen.storyboard */,
 				112285B02D0AFA22006D2CBF /* Info.plist */,
-				1183E8332D104153006872DB /* CommonCurrency.swift */,
 			);
 			path = "currency-converter";
 			sourceTree = "<group>";
@@ -181,6 +180,15 @@
 				1183E83E2D109FA6006872DB /* CurrencyPickerTableViewCell.swift */,
 			);
 			path = CurrencyPicker;
+			sourceTree = "<group>";
+		};
+		1183E8462D10C760006872DB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1183E8402D10A735006872DB /* Colors.swift */,
+				1183E8332D104153006872DB /* CommonCurrency.swift */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
