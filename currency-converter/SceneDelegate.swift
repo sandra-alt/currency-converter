@@ -14,11 +14,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        setupWindow(with: windowScene)
+    }
+    
+    // Configure the main application window
+    private func setupWindow(with windowScene: UIWindowScene) {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.windowScene = windowScene
-        
-        // TODO: - Clean up
-        window?.rootViewController = UINavigationController(rootViewController: ConverterViewController(title: "Converter", viewModel: ConverterViewModel(repository: ConverterNetworkRepository(networkService: ConverterNetworkService()))))
+        window?.rootViewController = createRootViewController()
         window?.makeKeyAndVisible()
+    }
+    
+    // Create the root view controller with its dependencies
+    private func createRootViewController() -> UINavigationController {
+        
+        // Set up the dependency chain for the converter view
+        let networkService = ConverterNetworkService()
+        let networkRepository = ConverterNetworkRepository(networkService: networkService)
+        let viewModel = ConverterViewModel(repository: networkRepository)
+        let rootViewController = ConverterViewController(title: "Converter", viewModel: viewModel)
+        
+        return UINavigationController(rootViewController: rootViewController)
     }
 }
