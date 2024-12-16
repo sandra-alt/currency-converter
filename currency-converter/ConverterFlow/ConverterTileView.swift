@@ -68,7 +68,6 @@ class ConverterTileView: UIView {
     
     private lazy var fromCurrencyButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("PLN", for: .normal)
         button.setTitleColor(Layout.buttonTextColor, for: .normal)
         button.contentHorizontalAlignment = .trailing
         button.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -92,7 +91,6 @@ class ConverterTileView: UIView {
     
     private lazy var toAmmountLabel: UILabel = {
         let label = UILabel()
-        label.text = "0.00"
         label.textColor = Layout.textColor
         label.numberOfLines = 0
         return label
@@ -100,7 +98,6 @@ class ConverterTileView: UIView {
     
     private lazy var toCurrencyButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("JPY", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.contentHorizontalAlignment = .trailing
         button.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -109,11 +106,27 @@ class ConverterTileView: UIView {
     
     // MARK: - Variables
     private var cancellables: Set<AnyCancellable> = []
+    var fromAmount: AnyPublisher<String, Never> {
+        fromAmountTextField.textPublisher.compactMap { $0 }.eraseToAnyPublisher()
+    }
+    
+    var fromCurrencyTapped: AnyPublisher<Void, Never> {
+        fromCurrencyButton.tapPublisher.eraseToAnyPublisher()
+    }
+    
+    var toCurrencyTapped: AnyPublisher<Void, Never> {
+        toCurrencyButton.tapPublisher.eraseToAnyPublisher()
+    }
+    
+    @Published var fromCurrencySelected: Currency = .USD
+    @Published var toCurrencySelected: Currency = .EUR
+    @Published var amountExhcanged: String = "-.--"
     
     // MARK: - Initialization
     init() {
         super.init(frame: UIScreen.main.bounds)
         setupView()
+        bind()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -151,5 +164,19 @@ class ConverterTileView: UIView {
         // Add and pin the tile view to a container view
         addSubview(tileView)
         tileView.bindFrameToSuperview()
+    }
+    
+    private func bind() {
+        $fromCurrencySelected.sink { [weak self] currencyCode in
+            self?.fromCurrencyButton.setTitle(currencyCode.rawValue, for: .normal)
+        }.store(in: &cancellables)
+        
+        $toCurrencySelected.sink { [weak self] currencyCode in
+            self?.toCurrencyButton.setTitle(currencyCode.rawValue, for: .normal)
+        }.store(in: &cancellables)
+        
+        $amountExhcanged.sink { [weak self] value in
+            self?.toAmmountLabel.text = value
+        }.store(in: &cancellables)
     }
 }

@@ -5,6 +5,7 @@
 //  Created by  Oleksandra on 12.12.2024.
 //
 
+import Combine
 import UIKit
 
 class ConverterViewController: UIViewController {
@@ -16,12 +17,15 @@ class ConverterViewController: UIViewController {
     }
     
     // MARK: - Properties
+    private var cancellables: Set<AnyCancellable> = []
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
     private let tempConverterRepository = ConverterNetworkRepository(networkService: ConverterNetworkService()) // Temp - to check if network works correctly
     
     private var requestTask: Task<Void, Never>?
+    
+    var viewModel: ConverterViewModeling?
     
     // MARK: - UI Components
     private lazy var tileView: ConverterTileView = {
@@ -31,11 +35,12 @@ class ConverterViewController: UIViewController {
     }()
     
     // MARK: - Initialization
-    init(title: String) {
+    init(title: String, viewModel: ConverterViewModeling) {
         super.init(nibName: nil, bundle: nil)
         
         // Setup a title
         self.title = title
+        self.viewModel = viewModel
     }
 
     required init?(coder: NSCoder) {
@@ -49,15 +54,16 @@ class ConverterViewController: UIViewController {
         // Setup views
         setupScrollView()
         setupUI()
+        bind(with: viewModel!)
         
         // Temp
-        startRepeatingRequest()
+        //startRepeatingRequest()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        stopRepeatingRequest()
+        //stopRepeatingRequest()
     }
     
     // MARK: - Scroll View Setup
@@ -108,12 +114,74 @@ class ConverterViewController: UIViewController {
     
     private func triggerRequest() async {
         // Temp
-        let model = ConverterRequestModel(fromAmount: "100.00", fromCurrency: "PLN", toCurrency: "EUR")
-        do {
-            let result = try await tempConverterRepository.exchange(model: model)
-            print(result)
-        } catch {
-            print("-error-")
-        }
+//        let model = ConverterRequestModel(fromAmount: "100.00", fromCurrency: "PLN", toCurrency: "EUR")
+//        do {
+//            let result = try await tempConverterRepository.exchange(model: model)
+//            print(result)
+//        } catch {
+//            print("-error-")
+//        }
+    }
+    
+    // MARK: - Binding
+    
+    func bind(with viewModel: ConverterViewModeling) {
+        viewModel.onAmountReceived
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                self?.tileView.amountExhcanged = value
+            }.store(in: &cancellables)
+        
+        viewModel.onError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] error in
+                self?.tileView.amountExhcanged = "-.--"
+                // self?.showError(_ text: error)
+            }.store(in: &cancellables)
+        
+//        tileView.fromAmount
+//            .subscribe(viewModel.onAmountTyped)
+//            .store(in: &cancellables)
+        
+        tileView.fromAmount
+            .sink { value in
+                viewModel.onAmountTyped.send(value)
+            }.store(in: &cancellables)
+        
+        tileView.fromCurrencyTapped
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                // Present picker
+                self.showCurrencyPicker(completion: { currency in
+                    self.viewModel?.didSelectFromCurrency.send(currency)
+                    self.tileView.fromCurrencySelected = currency
+                })
+            }.store(in: &cancellables)
+
+        tileView.toCurrencyTapped
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                // Present picker
+                self.showCurrencyPicker(completion: { currency in
+                    self.viewModel?.didSelectToCurrency.send(currency)
+                    self.tileView.toCurrencySelected = currency
+                })
+            }.store(in: &cancellables)
+    }
+    
+    private func showCurrencyPicker(completion: @escaping (Currency) -> Void) {
+        let vm = CurrencyPickerViewModel()
+        let vc = CurrencyPickerViewController(viewModel: vm)
+        
+        vm.onCurrencySelected
+            .receive(on: DispatchQueue.main)
+            .sink { currency in
+                completion(currency)
+                vc.dismiss(animated: true)
+            }.store(in: &cancellables)
+        
+        present(vc, animated: true)
     }
 }
