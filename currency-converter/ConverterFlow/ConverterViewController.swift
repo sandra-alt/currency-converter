@@ -5,6 +5,7 @@
 //  Created by  Oleksandra on 12.12.2024.
 //
 
+import Combine
 import UIKit
 
 class ConverterViewController: UIViewController {
@@ -13,25 +14,45 @@ class ConverterViewController: UIViewController {
     private struct Layout {
         static let topSpace: CGFloat = 48.0
         static let margin: CGFloat = 24.0
+        static let bottomSpace: CGFloat = 16.0
     }
     
     // MARK: - Properties
+    private var cancellables: Set<AnyCancellable> = []
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private var gradientLayer: CAGradientLayer?
     
-    private let tempConverterRepository = ConverterNetworkRepository(networkService: ConverterNetworkService()) // Temp - to check if network works correctly
-    
-    private var requestTask: Task<Void, Never>?
+    var viewModel: ConverterViewModeling
     
     // MARK: - UI Components
-    private lazy var tileView: ConverterTileView = {
-        let view = ConverterTileView()
+    private lazy var vStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.alignment = .fill
+        view.distribution = .fill
+        view.spacing = Layout.bottomSpace
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    private lazy var tileView: ConverterTileView = {
+        let view = ConverterTileView()
+        return view
+    }()
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .red
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
     // MARK: - Initialization
-    init(title: String) {
+    init(title: String, viewModel: ConverterViewModeling) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
         // Setup a title
@@ -49,15 +70,14 @@ class ConverterViewController: UIViewController {
         // Setup views
         setupScrollView()
         setupUI()
-        
-        // Temp
-        startRepeatingRequest()
+        bind(with: viewModel)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        stopRepeatingRequest()
+        // Update the gradient layer's frame to match the view's bounds
+        gradientLayer?.frame = view.bounds
     }
     
     // MARK: - Scroll View Setup
@@ -82,38 +102,125 @@ class ConverterViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = .systemGray4
         
-        // Add a tile view inside the content view
-        contentView.addSubview(tileView)
+        // Configure the background
+        let color = [
+            UIColor.appColor(.blue)?.cgColor,    // Start color
+            UIColor.appColor(.airSuperiorityBlue)?.cgColor, // Middle color
+            UIColor.appColor(.uranianBlue)?.cgColor // End color
+        ]
+        setupGradientBackground(colors: color)
+        
+        // Add a tile view and an error label to the content view
+        [tileView, errorLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            vStack.addArrangedSubview($0)
+        }
+        contentView.addSubview(vStack)
         
         // Pin the tile view to the edges of the content view
-        tileView.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
+        vStack.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
     }
     
-    // MARK: - Temp timer
-    private func startRepeatingRequest() {
-        requestTask = Task {
-            while !Task.isCancelled {
-                await triggerRequest()
-                try? await Task.sleep(nanoseconds: 10 * 1_000_000_000) // 10 seconds
-            }
-        }
-    }
+    // MARK: - Binding
+    func bind(with viewModel: ConverterViewModeling) {
+        viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                guard let self = self else { return }
+                
+                self.tileView.showActivityIndicator(isLoading: isLoading)
+            }.store(in: &cancellables)
+        
+        viewModel.onAmountReceived
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                guard let self = self else { return }
+                
+                self.showError(nil)
+                self.tileView.amountExhcanged = value
+            }.store(in: &cancellables)
+        
+        viewModel.onError
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] error in
+                guard let self = self else { return }
+                
+                self.tileView.amountExhcanged = "-.--"
+                self.showError(error)
+            }.store(in: &cancellables)
+        
+        tileView.fromAmount
+            .sink { [weak self] value in
+                guard let self = self else { return }
+                
+                guard !value.isEmpty else {
+                    self.showError(nil)
+                    self.tileView.amountExhcanged = "-.--"
+                    return
+                }
+                viewModel.onAmountTyped.send(value)
+            }.store(in: &cancellables)
+        
+        tileView.fromCurrencyTapped
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                // Present picker
+                self.showCurrencyPicker(completion: { currency in
+                    self.viewModel.didSelectFromCurrency.send(currency)
+                    self.tileView.fromCurrencySelected = currency
+                })
+            }.store(in: &cancellables)
 
-    private func stopRepeatingRequest() {
-        requestTask?.cancel()
-        requestTask = nil
+        tileView.toCurrencyTapped
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                // Present picker
+                self.showCurrencyPicker(completion: { currency in
+                    self.viewModel.didSelectToCurrency.send(currency)
+                    self.tileView.toCurrencySelected = currency
+                })
+            }.store(in: &cancellables)
     }
     
-    private func triggerRequest() async {
-        // Temp
-        let model = ConverterRequestModel(fromAmount: "100.00", fromCurrency: "PLN", toCurrency: "EUR")
-        do {
-            let result = try await tempConverterRepository.exchange(model: model)
-            print(result)
-        } catch {
-            print("-error-")
+    private func showCurrencyPicker(completion: @escaping (Currency) -> Void) {
+        let vm = CurrencyPickerViewModel()
+        let vc = CurrencyPickerViewController(viewModel: vm)
+        
+        vm.onCurrencySelected
+            .receive(on: DispatchQueue.main)
+            .sink { currency in
+                completion(currency)
+                vc.dismiss(animated: true)
+            }.store(in: &cancellables)
+        
+        present(vc, animated: true)
+    }
+    
+    private func showError(_ error: String?) {
+        guard let error = error else {
+            errorLabel.isHidden = true
+            return
         }
+        
+        errorLabel.isHidden = error.isEmpty
+        errorLabel.text = error
+    }
+}
+
+extension ConverterViewController {
+    func setupGradientBackground(colors: [CGColor?]) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0) // Top-left corner
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)   // Bottom-right corner
+        gradientLayer.frame = view.bounds
+        
+        self.gradientLayer = gradientLayer
+        
+        // Add the gradient layer to the view
+        view.layer.insertSublayer(gradientLayer, at: 0)
     }
 }

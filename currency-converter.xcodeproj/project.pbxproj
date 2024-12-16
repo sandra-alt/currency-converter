@@ -26,6 +26,16 @@
 		1183E8282D0F728C006872DB /* ConverterNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8272D0F728C006872DB /* ConverterNetworkService.swift */; };
 		1183E82A2D0F72E3006872DB /* ConverterResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8292D0F72E3006872DB /* ConverterResponseModel.swift */; };
 		1183E82C2D0F73BB006872DB /* ConverterNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E82B2D0F73BB006872DB /* ConverterNetworkRepository.swift */; };
+		1183E8302D0F9C19006872DB /* ConverterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E82F2D0F9C19006872DB /* ConverterViewModel.swift */; };
+		1183E8322D0FB1C7006872DB /* ConverterViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8312D0FB1C7006872DB /* ConverterViewModeling.swift */; };
+		1183E8342D104153006872DB /* CommonCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8332D104153006872DB /* CommonCurrency.swift */; };
+		1183E8372D1057BA006872DB /* CurrencyPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8362D1057BA006872DB /* CurrencyPickerViewController.swift */; };
+		1183E8392D107496006872DB /* CurrencyPickerTableAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8382D107496006872DB /* CurrencyPickerTableAdapter.swift */; };
+		1183E83B2D107589006872DB /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E83A2D107589006872DB /* Reusable.swift */; };
+		1183E83D2D108190006872DB /* CurrencyPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E83C2D108190006872DB /* CurrencyPickerViewModel.swift */; };
+		1183E83F2D109FA6006872DB /* CurrencyPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E83E2D109FA6006872DB /* CurrencyPickerTableViewCell.swift */; };
+		1183E8412D10A735006872DB /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8402D10A735006872DB /* Colors.swift */; };
+		1183E8452D10BE36006872DB /* ActivityIndicator+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1183E8442D10BE36006872DB /* ActivityIndicator+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +59,16 @@
 		1183E8272D0F728C006872DB /* ConverterNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterNetworkService.swift; sourceTree = "<group>"; };
 		1183E8292D0F72E3006872DB /* ConverterResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterResponseModel.swift; sourceTree = "<group>"; };
 		1183E82B2D0F73BB006872DB /* ConverterNetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterNetworkRepository.swift; sourceTree = "<group>"; };
+		1183E82F2D0F9C19006872DB /* ConverterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewModel.swift; sourceTree = "<group>"; };
+		1183E8312D0FB1C7006872DB /* ConverterViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewModeling.swift; sourceTree = "<group>"; };
+		1183E8332D104153006872DB /* CommonCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonCurrency.swift; sourceTree = "<group>"; };
+		1183E8362D1057BA006872DB /* CurrencyPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerViewController.swift; sourceTree = "<group>"; };
+		1183E8382D107496006872DB /* CurrencyPickerTableAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerTableAdapter.swift; sourceTree = "<group>"; };
+		1183E83A2D107589006872DB /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		1183E83C2D108190006872DB /* CurrencyPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerViewModel.swift; sourceTree = "<group>"; };
+		1183E83E2D109FA6006872DB /* CurrencyPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerTableViewCell.swift; sourceTree = "<group>"; };
+		1183E8402D10A735006872DB /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		1183E8442D10BE36006872DB /* ActivityIndicator+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActivityIndicator+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				11111B252D0C551B0025784E /* UIView+Extension.swift */,
+				1183E83A2D107589006872DB /* Reusable.swift */,
+				1183E8442D10BE36006872DB /* ActivityIndicator+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -90,6 +112,7 @@
 		112285A12D0AFA20006D2CBF /* currency-converter */ = {
 			isa = PBXGroup;
 			children = (
+				1183E8462D10C760006872DB /* Resources */,
 				1183E8152D0F6077006872DB /* Network */,
 				112367512D0E2BCC00484E63 /* UI */,
 				11111B242D0C55050025784E /* Extensions */,
@@ -106,6 +129,9 @@
 		112285B62D0B041D006D2CBF /* ConverterFlow */ = {
 			isa = PBXGroup;
 			children = (
+				1183E8352D105598006872DB /* CurrencyPicker */,
+				1183E8312D0FB1C7006872DB /* ConverterViewModeling.swift */,
+				1183E82F2D0F9C19006872DB /* ConverterViewModel.swift */,
 				112285B72D0B0539006D2CBF /* ConverterViewController.swift */,
 				11111B222D0C3E3C0025784E /* ConverterTileView.swift */,
 			);
@@ -143,6 +169,26 @@
 				1183E82B2D0F73BB006872DB /* ConverterNetworkRepository.swift */,
 			);
 			path = Converter;
+			sourceTree = "<group>";
+		};
+		1183E8352D105598006872DB /* CurrencyPicker */ = {
+			isa = PBXGroup;
+			children = (
+				1183E8362D1057BA006872DB /* CurrencyPickerViewController.swift */,
+				1183E8382D107496006872DB /* CurrencyPickerTableAdapter.swift */,
+				1183E83C2D108190006872DB /* CurrencyPickerViewModel.swift */,
+				1183E83E2D109FA6006872DB /* CurrencyPickerTableViewCell.swift */,
+			);
+			path = CurrencyPicker;
+			sourceTree = "<group>";
+		};
+		1183E8462D10C760006872DB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1183E8402D10A735006872DB /* Colors.swift */,
+				1183E8332D104153006872DB /* CommonCurrency.swift */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,8 +267,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1183E8452D10BE36006872DB /* ActivityIndicator+Extension.swift in Sources */,
+				1183E83F2D109FA6006872DB /* CurrencyPickerTableViewCell.swift in Sources */,
+				1183E8392D107496006872DB /* CurrencyPickerTableAdapter.swift in Sources */,
+				1183E8322D0FB1C7006872DB /* ConverterViewModeling.swift in Sources */,
+				1183E8302D0F9C19006872DB /* ConverterViewModel.swift in Sources */,
 				1183E81F2D0F653D006872DB /* APIServiceConstants.swift in Sources */,
 				1183E82A2D0F72E3006872DB /* ConverterResponseModel.swift in Sources */,
+				1183E8412D10A735006872DB /* Colors.swift in Sources */,
 				11111B262D0C551B0025784E /* UIView+Extension.swift in Sources */,
 				11111B232D0C3E3C0025784E /* ConverterTileView.swift in Sources */,
 				112285A32D0AFA20006D2CBF /* AppDelegate.swift in Sources */,
@@ -230,11 +282,15 @@
 				1183E81B2D0F63AC006872DB /* HTTPTask.swift in Sources */,
 				1183E8222D0F7168006872DB /* ConverterRouter.swift in Sources */,
 				1183E8172D0F61DD006872DB /* BaseNetworkService.swift in Sources */,
+				1183E83B2D107589006872DB /* Reusable.swift in Sources */,
 				1183E8192D0F6385006872DB /* HTTPMethod.swift in Sources */,
 				1183E82C2D0F73BB006872DB /* ConverterNetworkRepository.swift in Sources */,
+				1183E8372D1057BA006872DB /* CurrencyPickerViewController.swift in Sources */,
 				112285A52D0AFA20006D2CBF /* SceneDelegate.swift in Sources */,
+				1183E8342D104153006872DB /* CommonCurrency.swift in Sources */,
 				112285B82D0B0539006D2CBF /* ConverterViewController.swift in Sources */,
 				112367532D0E2BE100484E63 /* NumericTextField.swift in Sources */,
+				1183E83D2D108190006872DB /* CurrencyPickerViewModel.swift in Sources */,
 				1183E81D2D0F64F1006872DB /* NetworkError.swift in Sources */,
 				1183E8282D0F728C006872DB /* ConverterNetworkService.swift in Sources */,
 			);

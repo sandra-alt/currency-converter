@@ -1,0 +1,147 @@
+//
+//  CommonCurrency.swift
+//  currency-converter
+//
+//  Created by  Oleksandra on 16.12.2024.
+//
+
+import Foundation
+
+enum Currency: String, CaseIterable {
+    case USD, CAD, EUR, AED, AFN, ALL, AMD, ARS, AUD, AZN,
+         BAM, BDT, BGN, BHD, BIF, BND, BOB, BRL, BWP, BYN,
+         BZD, CDF, CHF, CLP, CNY, COP, CRC, CVE, CZK, DJF,
+         DKK, DOP, DZD, EEK, EGP, ERN, ETB, GBP, GEL, GHS,
+         GNF, GTQ, HKD, HNL, HRK, HUF, IDR, ILS, INR, IQD,
+         IRR, ISK, JMD, JOD, JPY, KES, KHR, KMF, KRW, KWD,
+         KZT, LBP, LKR, LTL, LVL, LYD, MAD, MDL, MGA, MKD,
+         MMK, MOP, MUR, MXN, MYR, MZN, NAD, NGN, NIO, NOK,
+         NPR, NZD, OMR, PAB, PEN, PHP, PKR, PLN, PYG, QAR,
+         RON, RSD, RUB, RWF, SAR, SDG, SEK, SGD, SOS, SYP,
+         THB, TND, TOP, TRY, TTD, TWD, TZS, UAH, UGX, UYU,
+         UZS, VEF, VND, XAF, XOF, YER, ZAR, ZMK, ZWL
+    
+    var name: String {
+        switch self {
+        case .USD: return "US Dollar"
+        case .CAD: return "Canadian Dollar"
+        case .EUR: return "Euro"
+        case .AED: return "United Arab Emirates Dirham"
+        case .AFN: return "Afghan Afghani"
+        case .ALL: return "Albanian Lek"
+        case .AMD: return "Armenian Dram"
+        case .ARS: return "Argentine Peso"
+        case .AUD: return "Australian Dollar"
+        case .AZN: return "Azerbaijani Manat"
+        case .BAM: return "Bosnia-Herzegovina Convertible Mark"
+        case .BDT: return "Bangladeshi Taka"
+        case .BGN: return "Bulgarian Lev"
+        case .BHD: return "Bahraini Dinar"
+        case .BIF: return "Burundian Franc"
+        case .BND: return "Brunei Dollar"
+        case .BOB: return "Bolivian Boliviano"
+        case .BRL: return "Brazilian Real"
+        case .BWP: return "Botswanan Pula"
+        case .BYN: return "Belarusian Ruble"
+        case .BZD: return "Belize Dollar"
+        case .CDF: return "Congolese Franc"
+        case .CHF: return "Swiss Franc"
+        case .CLP: return "Chilean Peso"
+        case .CNY: return "Chinese Yuan"
+        case .COP: return "Colombian Peso"
+        case .CRC: return "Costa Rican Colón"
+        case .CVE: return "Cape Verdean Escudo"
+        case .CZK: return "Czech Republic Koruna"
+        case .DJF: return "Djiboutian Franc"
+        case .DKK: return "Danish Krone"
+        case .DOP: return "Dominican Peso"
+        case .DZD: return "Algerian Dinar"
+        case .EEK: return "Estonian Kroon"
+        case .EGP: return "Egyptian Pound"
+        case .ERN: return "Eritrean Nakfa"
+        case .ETB: return "Ethiopian Birr"
+        case .GBP: return "British Pound Sterling"
+        case .GEL: return "Georgian Lari"
+        case .GHS: return "Ghanaian Cedi"
+        case .GNF: return "Guinean Franc"
+        case .GTQ: return "Guatemalan Quetzal"
+        case .HKD: return "Hong Kong Dollar"
+        case .HNL: return "Honduran Lempira"
+        case .HRK: return "Croatian Kuna"
+        case .HUF: return "Hungarian Forint"
+        case .IDR: return "Indonesian Rupiah"
+        case .ILS: return "Israeli New Sheqel"
+        case .INR: return "Indian Rupee"
+        case .IQD: return "Iraqi Dinar"
+        case .IRR: return "Iranian Rial"
+        case .ISK: return "Icelandic Króna"
+        case .JMD: return "Jamaican Dollar"
+        case .JOD: return "Jordanian Dinar"
+        case .JPY: return "Japanese Yen"
+        case .KES: return "Kenyan Shilling"
+        case .KHR: return "Cambodian Riel"
+        case .KMF: return "Comorian Franc"
+        case .KRW: return "South Korean Won"
+        case .KWD: return "Kuwaiti Dinar"
+        case .KZT: return "Kazakhstani Tenge"
+        case .LBP: return "Lebanese Pound"
+        case .LKR: return "Sri Lankan Rupee"
+        case .LTL: return "Lithuanian Litas"
+        case .LVL: return "Latvian Lats"
+        case .LYD: return "Libyan Dinar"
+        case .MAD: return "Moroccan Dirham"
+        case .MDL: return "Moldovan Leu"
+        case .MGA: return "Malagasy Ariary"
+        case .MKD: return "Macedonian Denar"
+        case .MMK: return "Myanma Kyat"
+        case .MOP: return "Macanese Pataca"
+        case .MUR: return "Mauritian Rupee"
+        case .MXN: return "Mexican Peso"
+        case .MYR: return "Malaysian Ringgit"
+        case .MZN: return "Mozambican Metical"
+        case .NAD: return "Namibian Dollar"
+        case .NGN: return "Nigerian Naira"
+        case .NIO: return "Nicaraguan Córdoba"
+        case .NOK: return "Norwegian Krone"
+        case .NPR: return "Nepalese Rupee"
+        case .NZD: return "New Zealand Dollar"
+        case .OMR: return "Omani Rial"
+        case .PAB: return "Panamanian Balboa"
+        case .PEN: return "Peruvian Nuevo Sol"
+        case .PHP: return "Philippine Peso"
+        case .PKR: return "Pakistani Rupee"
+        case .PLN: return "Polish Zloty"
+        case .PYG: return "Paraguayan Guarani"
+        case .QAR: return "Qatari Rial"
+        case .RON: return "Romanian Leu"
+        case .RSD: return "Serbian Dinar"
+        case .RUB: return "Russian Ruble"
+        case .RWF: return "Rwandan Franc"
+        case .SAR: return "Saudi Riyal"
+        case .SDG: return "Sudanese Pound"
+        case .SEK: return "Swedish Krona"
+        case .SGD: return "Singapore Dollar"
+        case .SOS: return "Somali Shilling"
+        case .SYP: return "Syrian Pound"
+        case .THB: return "Thai Baht"
+        case .TND: return "Tunisian Dinar"
+        case .TOP: return "Tongan Paʻanga"
+        case .TRY: return "Turkish Lira"
+        case .TTD: return "Trinidad and Tobago Dollar"
+        case .TWD: return "New Taiwan Dollar"
+        case .TZS: return "Tanzanian Shilling"
+        case .UAH: return "Ukrainian Hryvnia"
+        case .UGX: return "Ugandan Shilling"
+        case .UYU: return "Uruguayan Peso"
+        case .UZS: return "Uzbekistan Som"
+        case .VEF: return "Venezuelan Bolívar"
+        case .VND: return "Vietnamese Dong"
+        case .XAF: return "CFA Franc BEAC"
+        case .XOF: return "CFA Franc BCEAO"
+        case .YER: return "Yemeni Rial"
+        case .ZAR: return "South African Rand"
+        case .ZMK: return "Zambian Kwacha"
+        case .ZWL: return "Zimbabwean Dollar"
+        }
+    }
+}
