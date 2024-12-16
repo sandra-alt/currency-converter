@@ -14,6 +14,7 @@ class ConverterViewController: UIViewController {
     private struct Layout {
         static let topSpace: CGFloat = 48.0
         static let margin: CGFloat = 24.0
+        static let bottomSpace: CGFloat = 16.0
     }
     
     // MARK: - Properties
@@ -28,10 +29,29 @@ class ConverterViewController: UIViewController {
     var viewModel: ConverterViewModeling?
     
     // MARK: - UI Components
-    private lazy var tileView: ConverterTileView = {
-        let view = ConverterTileView()
+    private lazy var vStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.alignment = .fill
+        view.distribution = .fill
+        view.spacing = Layout.bottomSpace
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private lazy var tileView: ConverterTileView = {
+        let view = ConverterTileView()
+        return view
+    }()
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .red
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.text = "Error \n error-"
+        //label.isHidden = true
+        return label
     }()
     
     // MARK: - Initialization
@@ -90,11 +110,15 @@ class ConverterViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGray4
         
-        // Add a tile view inside the content view
-        contentView.addSubview(tileView)
+        // Add a tile view and an error label to the content view
+        [tileView, errorLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            vStack.addArrangedSubview($0)
+        }
+        contentView.addSubview(vStack)
         
         // Pin the tile view to the edges of the content view
-        tileView.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
+        vStack.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
     }
     
     // MARK: - Temp timer
@@ -129,6 +153,7 @@ class ConverterViewController: UIViewController {
         viewModel.onAmountReceived
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
+                self?.showError(nil)
                 self?.tileView.amountExhcanged = value
             }.store(in: &cancellables)
         
@@ -136,7 +161,7 @@ class ConverterViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
                 self?.tileView.amountExhcanged = "-.--"
-                // self?.showError(_ text: error)
+                self?.showError(error)
             }.store(in: &cancellables)
         
 //        tileView.fromAmount
@@ -144,7 +169,14 @@ class ConverterViewController: UIViewController {
 //            .store(in: &cancellables)
         
         tileView.fromAmount
-            .sink { value in
+            .sink { [weak self] value in
+                guard let self = self else { return }
+                
+                guard !value.isEmpty else {
+                    self.showError(nil)
+                    self.tileView.amountExhcanged = "-.--"
+                    return
+                }
                 viewModel.onAmountTyped.send(value)
             }.store(in: &cancellables)
         
@@ -183,5 +215,15 @@ class ConverterViewController: UIViewController {
             }.store(in: &cancellables)
         
         present(vc, animated: true)
+    }
+    
+    private func showError(_ error: String?) {
+        guard let error = error else {
+            errorLabel.isHidden = true
+            return
+        }
+        
+        errorLabel.isHidden = error.isEmpty
+        errorLabel.text = error
     }
 }

@@ -58,7 +58,7 @@ class ConverterTileView: UIView {
     
     private lazy var fromAmountTextField: NumericTextField = {
         let textField = NumericTextField()
-        textField.borderStyle = .roundedRect
+        textField.borderStyle = .none
         textField.placeholder = "Enter amount"
         textField.textColor = Layout.textColor
         textField.keyboardType = .decimalPad
@@ -107,7 +107,7 @@ class ConverterTileView: UIView {
     // MARK: - Variables
     private var cancellables: Set<AnyCancellable> = []
     var fromAmount: AnyPublisher<String, Never> {
-        fromAmountTextField.textPublisher.compactMap { $0 }.eraseToAnyPublisher()
+        fromAmountTextField.$validNumericText.compactMap { $0 }.eraseToAnyPublisher()
     }
     
     var fromCurrencyTapped: AnyPublisher<Void, Never> {

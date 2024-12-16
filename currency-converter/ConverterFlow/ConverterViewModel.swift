@@ -41,7 +41,9 @@ class ConverterViewModel: ConverterViewModeling {
     }
     
     private func bind() {
-        Publishers.CombineLatest3(onAmountTyped, didSelectFromCurrency, didSelectToCurrency)
+        Publishers.CombineLatest3(onAmountTyped.filter { !$0.isEmpty },
+                                  didSelectFromCurrency,
+                                  didSelectToCurrency)
             .sink { [weak self] amount, fromCurrency, toCurrency in
                 let model = ConverterRequestModel(fromAmount: amount, fromCurrency: fromCurrency.rawValue, toCurrency: toCurrency.rawValue)
                 self?.exchange(model: model)
@@ -56,7 +58,8 @@ class ConverterViewModel: ConverterViewModeling {
                 case .finished:
                     print("Conversion completed")
                 case .failure(let error):
-                    self?.error = error.localizedDescription
+                    guard let self = self, let error = error as? NetworkError else { return }
+                    self.error = error.errorInfo
                 }
             }, receiveValue: { [weak self] response in
                 self?.amount = response.amount

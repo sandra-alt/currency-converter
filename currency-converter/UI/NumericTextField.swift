@@ -33,7 +33,9 @@ class NumericTextField: UITextField {
             .compactMap { $0 }
             .map { [weak self] text -> String in
                 guard let self = self else { return "" }
-                return self.sanitizeNumericInput(text)
+                let validatedText = self.sanitizeNumericInput(text)
+                self.validNumericText = validatedText
+                return validatedText
             }
             .assign(to: \.text, on: self)
             .store(in: &cancellables)
