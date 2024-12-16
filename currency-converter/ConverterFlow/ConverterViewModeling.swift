@@ -14,8 +14,8 @@ protocol ConverterViewModelInput {
     var viewDidLoad: PassthroughSubject<Void, Never> { get }
     var onAmountTyped: PassthroughSubject<String, Never> { get }
 
-    var didSelectFromCurrency: PassthroughSubject<Currency, Never> { get }
-    var didSelectToCurrency: PassthroughSubject<Currency, Never> { get }
+    var didSelectFromCurrency: CurrentValueSubject<Currency, Never> { get }
+    var didSelectToCurrency: CurrentValueSubject<Currency, Never> { get }
 }
 
 protocol ConverterViewModelOutput {

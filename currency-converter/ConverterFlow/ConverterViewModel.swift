@@ -19,8 +19,8 @@ class ConverterViewModel: ConverterViewModeling {
     let viewDidLoad = PassthroughSubject<Void, Never>()
     let onAmountTyped = PassthroughSubject<String, Never>()
 
-    let didSelectFromCurrency = PassthroughSubject<Currency, Never>()
-    let didSelectToCurrency = PassthroughSubject<Currency, Never>()
+    let didSelectFromCurrency = CurrentValueSubject<Currency, Never>(.USD)
+    let didSelectToCurrency = CurrentValueSubject<Currency, Never>(.EUR)
     
     //Output
     var onError: AnyPublisher<String, Never> {
