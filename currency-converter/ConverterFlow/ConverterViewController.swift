@@ -23,10 +23,6 @@ class ConverterViewController: UIViewController {
     private let contentView = UIView()
     private var gradientLayer: CAGradientLayer?
     
-    private let tempConverterRepository = ConverterNetworkRepository(networkService: ConverterNetworkService()) // Temp - to check if network works correctly
-    
-    private var requestTask: Task<Void, Never>?
-    
     var viewModel: ConverterViewModeling
     
     // MARK: - UI Components
@@ -75,9 +71,6 @@ class ConverterViewController: UIViewController {
         setupScrollView()
         setupUI()
         bind(with: viewModel)
-        
-        // Temp
-        //startRepeatingRequest()
     }
     
     override func viewDidLayoutSubviews() {
@@ -85,10 +78,6 @@ class ConverterViewController: UIViewController {
         
         // Update the gradient layer's frame to match the view's bounds
         gradientLayer?.frame = view.bounds
-    }
-
-    deinit {
-        stopRepeatingRequest()
     }
     
     // MARK: - Scroll View Setup
@@ -133,34 +122,7 @@ class ConverterViewController: UIViewController {
         vStack.bindFrameToSuperview(top: Layout.topSpace, leading: Layout.margin, trailing: Layout.margin)
     }
     
-    // MARK: - Temp timer
-    private func startRepeatingRequest() {
-        requestTask = Task {
-            while !Task.isCancelled {
-                await triggerRequest()
-                try? await Task.sleep(nanoseconds: 10 * 1_000_000_000) // 10 seconds
-            }
-        }
-    }
-
-    private func stopRepeatingRequest() {
-        requestTask?.cancel()
-        requestTask = nil
-    }
-    
-    private func triggerRequest() async {
-        // Temp
-//        let model = ConverterRequestModel(fromAmount: "100.00", fromCurrency: "PLN", toCurrency: "EUR")
-//        do {
-//            let result = try await tempConverterRepository.exchange(model: model)
-//            print(result)
-//        } catch {
-//            print("-error-")
-//        }
-    }
-    
     // MARK: - Binding
-    
     func bind(with viewModel: ConverterViewModeling) {
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
@@ -197,7 +159,6 @@ class ConverterViewController: UIViewController {
                     self.tileView.amountExhcanged = "-.--"
                     return
                 }
-                self.startRepeatingRequest()
                 viewModel.onAmountTyped.send(value)
             }.store(in: &cancellables)
         

@@ -173,6 +173,7 @@ class ConverterTileView: UIView {
         tileView.bindFrameToSuperview()
     }
     
+    // MARK: - Binding
     private func bind() {
         $fromCurrencySelected.sink { [weak self] currencyCode in
             self?.fromCurrencyButton.setTitle(currencyCode.rawValue, for: .normal)
