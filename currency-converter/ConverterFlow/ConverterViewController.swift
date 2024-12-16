@@ -21,12 +21,13 @@ class ConverterViewController: UIViewController {
     private var cancellables: Set<AnyCancellable> = []
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private var gradientLayer: CAGradientLayer?
     
     private let tempConverterRepository = ConverterNetworkRepository(networkService: ConverterNetworkService()) // Temp - to check if network works correctly
     
     private var requestTask: Task<Void, Never>?
     
-    var viewModel: ConverterViewModeling?
+    var viewModel: ConverterViewModeling
     
     // MARK: - UI Components
     private lazy var vStack: UIStackView = {
@@ -49,18 +50,17 @@ class ConverterViewController: UIViewController {
         label.textColor = .red
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "Error \n error-"
-        //label.isHidden = true
+        label.isHidden = true
         return label
     }()
     
     // MARK: - Initialization
     init(title: String, viewModel: ConverterViewModeling) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         
         // Setup a title
         self.title = title
-        self.viewModel = viewModel
     }
 
     required init?(coder: NSCoder) {
@@ -74,16 +74,21 @@ class ConverterViewController: UIViewController {
         // Setup views
         setupScrollView()
         setupUI()
-        bind(with: viewModel!)
+        bind(with: viewModel)
         
         // Temp
         //startRepeatingRequest()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        //stopRepeatingRequest()
+        // Update the gradient layer's frame to match the view's bounds
+        gradientLayer?.frame = view.bounds
+    }
+
+    deinit {
+        stopRepeatingRequest()
     }
     
     // MARK: - Scroll View Setup
@@ -108,7 +113,14 @@ class ConverterViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = .systemGray4
+        
+        // Configure the background
+        let color = [
+            UIColor.appColor(.blue)?.cgColor,    // Start color
+            UIColor.appColor(.airSuperiorityBlue)?.cgColor, // Middle color
+            UIColor.appColor(.uranianBlue)?.cgColor // End color
+        ]
+        setupGradientBackground(colors: color)
         
         // Add a tile view and an error label to the content view
         [tileView, errorLabel].forEach {
@@ -150,23 +162,31 @@ class ConverterViewController: UIViewController {
     // MARK: - Binding
     
     func bind(with viewModel: ConverterViewModeling) {
+        viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                guard let self = self else { return }
+                
+                self.tileView.showActivityIndicator(isLoading: isLoading)
+            }.store(in: &cancellables)
+        
         viewModel.onAmountReceived
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.showError(nil)
-                self?.tileView.amountExhcanged = value
+                guard let self = self else { return }
+                
+                self.showError(nil)
+                self.tileView.amountExhcanged = value
             }.store(in: &cancellables)
         
         viewModel.onError
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
-                self?.tileView.amountExhcanged = "-.--"
-                self?.showError(error)
+                guard let self = self else { return }
+                
+                self.tileView.amountExhcanged = "-.--"
+                self.showError(error)
             }.store(in: &cancellables)
-        
-//        tileView.fromAmount
-//            .subscribe(viewModel.onAmountTyped)
-//            .store(in: &cancellables)
         
         tileView.fromAmount
             .sink { [weak self] value in
@@ -177,6 +197,7 @@ class ConverterViewController: UIViewController {
                     self.tileView.amountExhcanged = "-.--"
                     return
                 }
+                self.startRepeatingRequest()
                 viewModel.onAmountTyped.send(value)
             }.store(in: &cancellables)
         
@@ -186,7 +207,7 @@ class ConverterViewController: UIViewController {
                 
                 // Present picker
                 self.showCurrencyPicker(completion: { currency in
-                    self.viewModel?.didSelectFromCurrency.send(currency)
+                    self.viewModel.didSelectFromCurrency.send(currency)
                     self.tileView.fromCurrencySelected = currency
                 })
             }.store(in: &cancellables)
@@ -197,7 +218,7 @@ class ConverterViewController: UIViewController {
                 
                 // Present picker
                 self.showCurrencyPicker(completion: { currency in
-                    self.viewModel?.didSelectToCurrency.send(currency)
+                    self.viewModel.didSelectToCurrency.send(currency)
                     self.tileView.toCurrencySelected = currency
                 })
             }.store(in: &cancellables)
@@ -225,5 +246,20 @@ class ConverterViewController: UIViewController {
         
         errorLabel.isHidden = error.isEmpty
         errorLabel.text = error
+    }
+}
+
+extension ConverterViewController {
+    func setupGradientBackground(colors: [CGColor?]) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors
+        gradientLayer.startPoint = CGPoint(x: 0.0, y: 0.0) // Top-left corner
+        gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)   // Bottom-right corner
+        gradientLayer.frame = view.bounds
+        
+        self.gradientLayer = gradientLayer
+        
+        // Add the gradient layer to the view
+        view.layer.insertSublayer(gradientLayer, at: 0)
     }
 }

@@ -14,6 +14,7 @@ class CurrencyPickerViewController: UIViewController {
         let view = UITableView()
         view.separatorStyle = .none
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
         return view
     }()
     
@@ -24,6 +25,7 @@ class CurrencyPickerViewController: UIViewController {
         CurrencyPickerTableAdapter(tableView: tableView)
     }()
     
+    // MARK: - Initialization
     required init(viewModel: CurrencyPickerViewModeling) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -33,6 +35,7 @@ class CurrencyPickerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle and setup
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -43,6 +46,14 @@ class CurrencyPickerViewController: UIViewController {
     private func setupUI() {
         view.addSubview(tableView)
         tableView.bindFrameToSuperview()
+        
+        // Configure the background
+        let color = [
+            UIColor.appColor(.blue)?.cgColor,    // Start color
+            UIColor.appColor(.uranianBlue)?.cgColor // End color
+        ]
+        
+        view.backgroundColor = UIColor.appColor(.blue)
     }
     
     private func bind() {

@@ -29,7 +29,7 @@ class ConverterTileView: UIView {
     // MARK: - UI Components
     private lazy var tileView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.appColor(.antiFlashWhite)
         view.layer.cornerRadius = Layout.cornerRadius
         view.layer.shadowColor = Layout.shadowColor
         view.layer.shadowOpacity = Layout.shadowOpacity
@@ -76,7 +76,7 @@ class ConverterTileView: UIView {
     
     private lazy var separatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
+        view.backgroundColor = UIColor.appColor(.battleshipGray)
         return view
     }()
     
@@ -86,6 +86,13 @@ class ConverterTileView: UIView {
         view.alignment = .fill
         view.distribution = .fill
         view.spacing = Layout.horizontalSpacing
+        return view
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView()
+        view.hidesWhenStopped = true
+        view.style = .medium
         return view
     }()
     
@@ -143,7 +150,7 @@ class ConverterTileView: UIView {
         }
         
         // Add the elements of the bottom row of the tile to another horizontal stack
-        [toAmmountLabel, toCurrencyButton].forEach {
+        [toAmmountLabel, activityIndicator, toCurrencyButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             toHStack.addArrangedSubview($0)
         }
@@ -178,5 +185,11 @@ class ConverterTileView: UIView {
         $amountExhcanged.sink { [weak self] value in
             self?.toAmmountLabel.text = value
         }.store(in: &cancellables)
+    }
+    
+    
+    // MARK: - Activity Indicator
+    func showActivityIndicator(isLoading: Bool) {
+        activityIndicator.shouldAnimate(isLoading)
     }
 }

@@ -63,20 +63,19 @@ final class CurrencyPickerTableAdapter<Item: Hashable> {
 extension CurrencyPickerTableAdapter {
     func registerCells(_ tableView: UITableView) {
         tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: UITableViewCell.reuseIdentifier
+            CurrencyPickerTableViewCell.self,
+            forCellReuseIdentifier: CurrencyPickerTableViewCell.reuseIdentifier
         )
     }
     
     private func getCellIdentifier() -> String {
-        UITableViewCell.reuseIdentifier
+        CurrencyPickerTableViewCell.reuseIdentifier
     }
     
     private func renderCell(_ item: Item, _ cell: UITableViewCell) {
         switch (item, cell) {
-        case (let item as Currency, let cell as UITableViewCell):
-            cell.textLabel?.text = item.name + " - " + item.rawValue
-            // TODO: - cell.setupCell(text: item)
+        case (let item as Currency, let cell as CurrencyPickerTableViewCell):
+            cell.setupCell(currency: item)
         default:
             break
         }

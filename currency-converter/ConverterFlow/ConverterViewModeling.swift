@@ -19,6 +19,7 @@ protocol ConverterViewModelInput {
 }
 
 protocol ConverterViewModelOutput {
+    var isLoading: CurrentValueSubject<Bool, Never> { get }
     var onError: AnyPublisher<String, Never> { get }
     var onAmountReceived: AnyPublisher<String, Never> { get }
 }
